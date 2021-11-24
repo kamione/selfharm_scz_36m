@@ -232,8 +232,26 @@ for (ith_month in 1:31) {
 
 write_rds(results_mat, path = here("cache", "data-cf_desc-prediction.rds"))
 
+# results_mat <- read_rds(here("cache", "data-cf_desc-prediction.rds"))
 
+# check out the results
+results_mat %>% 
+    filter(metrics == "roauc") %>% 
+    pivot_longer(!c(month, metrics), values_to = "value") %>%
+    group_by(month) %>% 
+    summarize(mean = mean(value, na.rm = TRUE),
+              sd = sd(value, na.rm = TRUE)) %>% 
+    View()
 
+results_mat %>% 
+    filter(metrics == "accurary") %>% 
+    pivot_longer(!c(month, metrics), values_to = "value") %>%
+    group_by(month) %>% 
+    summarize(mean = mean(value, na.rm = TRUE),
+              sd = sd(value, na.rm = TRUE)) %>% 
+    View()
+
+# plot the results using area under the ROC curve
 boxplot_predictions <- results_mat %>% 
     filter(metrics == "roauc") %>% 
     pivot_longer(!c(month, metrics), values_to = "value") %>% 
@@ -248,190 +266,3 @@ ggsave(
     boxplot_predictions, width = 6, height = 4,
     filename = here("outputs", "figs", "boxplot_data-cf_desc-prediction_results.pdf")
 )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Information from past 6 months
-
-# remove all registered parallel workers
-unregister <- function() {
-    env <- foreach:::.foreachGlobals
-    rm(list = ls(name=env), pos = env)
-}
-
-
-master_lambda_grid <- tibble(penalty = 10^seq(-4, -1, length.out = 100))
-
-factor_binary <- function(x) {
-    factor_vec <- factor(x) %>% relevel(ref = 1)
-}
-
-
-for (ith_month in 1:36) {
-    print(paste0("month: ", ith_month))
-    
-    outcome_var <- paste0("m6M", ith_month, "_case")
-    f <- glue("{outcome_var} ~ .") %>% as.formula()
-    
-    
-    
-    if (ith_month == 1) {
-        
-        data_tmp <- data %>% 
-            select(Sex, Ageat1stpre, Yrs_edu, Age_onset, DUP_days,
-                   DUP_DSH_His, DUP_SS_His, sub_abuse, m6M1_case) %>% 
-            mutate_at(outcome_var, .funs = factor_binary)
-        
-    } else if (ith_month == 2) {
-        
-        data_tmp <- data %>% 
-            select(Sex, Ageat1stpre, Yrs_edu, Age_onset, DUP_days,
-                   DUP_DSH_His, DUP_SS_His, sub_abuse, starts_with("M1_"),
-                   m6M2_case) %>% 
-            mutate_at(outcome_var, .funs = factor)
-        
-    } else if (ith_month >= 3 & ith_month <= 10) {
-        data_tmp <- data %>% 
-            select(Sex, Ageat1stpre, Yrs_edu, Age_onset, DUP_days,
-                   DUP_DSH_His, DUP_SS_His, sub_abuse,
-                   matches(glue("^M[1-{ith_month - 1}]_")),
-                   all_of(outcome_var)) %>% 
-            mutate_at(outcome_var, .funs = factor) %>%
-            rowwise() %>% 
-            mutate(
-                mssd_pos = mssd(c_across(matches(glue("M[1-{ith_month - 1}]_Poscf"))), na.rm=TRUE),
-                mssd_neg = mssd(c_across(matches(glue("M[1-{ith_month - 1}]_Negcf"))), na.rm=TRUE),
-                mssd_aff = mssd(c_across(matches(glue("M[1-{ith_month - 1}]_Aff"))), na.rm=TRUE),
-                mssd_sofas = mssd(c_across(matches(glue("M[1-{ith_month - 1}]_SOFAScf"))), na.rm=TRUE),
-                mssd_comp =  mssd(c_across(matches(glue("M[1-{ith_month - 1}]_compliance"))), na.rm=TRUE)
-            ) %>% 
-            ungroup() %>% 
-            select(-matches(glue("M[1-{ith_month - 2}]_")))
-    } else if (ith_month >= 11) {
-        
-        if (ith ) {
-            first_digit = 0
-            second_digit = ith_month
-        } else {
-            first_digit = as.numeric(substr(ith_month - 1, 1, 1))
-            second_digit = as.numeric(substr(ith_month - 1, 2, 2))
-        }
-        
-        
-        
-        pattern = case_when(
-            first_digit == 1 ~ glue("M([1-9]|1[0-{second_digit}])_"),
-            first_digit == 2 ~ glue("M([1-9]|1[0-9]|2[0-{second_digit}])_"),
-            first_digit == 3 ~ glue("M([1-9]|1[0-9]|2[0-9]]|3[0-{second_digit}])_")
-        )
-        
-        first_digi_lag = as.numeric(substr(ith_month - 2, 1, 1))
-        second_digit_lag = as.numeric(substr(ith_month - 2, 2, 2))
-        
-        pattern_removed = case_when(
-            first_digit == 1 ~ glue("M([1-9]|1[0-{second_digit_lag}])_"),
-            first_digit == 2 ~ glue("M([1-9]|1[0-9]|2[0-{second_digit_lag}])_"),
-            first_digit == 3 ~ glue("M([1-9]|1[0-9]|2[0-9]]|3[0-{second_digit_lag}])_")
-        )
-        
-        data_tmp <- data %>% 
-            select(Sex, Ageat1stpre, Yrs_edu, Age_onset, DUP_days,
-                   DUP_DSH_His, DUP_SS_His, sub_abuse,
-                   matches(pattern),
-                   all_of(outcome_var)) %>% 
-            mutate_at(outcome_var, .funs = factor) %>%
-            rowwise() %>% 
-            mutate(
-                mssd_pos = mssd(c_across(matches(glue("{pattern}Poscf"))), na.rm=TRUE),
-                mssd_neg = mssd(c_across(matches(glue("{pattern}Negcf"))), na.rm=TRUE),
-                mssd_aff = mssd(c_across(matches(glue("{pattern}Aff"))), na.rm=TRUE),
-                mssd_sofas = mssd(c_across(matches(glue("{pattern}SOFAScf"))), na.rm=TRUE),
-                mssd_comp =  mssd(c_across(matches(glue("{pattern}compliance"))), na.rm=TRUE)
-            ) %>% 
-            ungroup() %>% 
-            select(-matches(pattern_removed))
-        
-    }
-    
-    set.seed(1234)
-    splits <- initial_split(data_tmp, prop = 3/4, stata = vars(outcome_var))
-    data_tr <- training(splits)
-    data_te <- testing(splits)
-    
-    set.seed(1234)
-    data_tr_cv <- vfold_cv(data_tr, v = 3, repeats = 10, strata = all_of(outcome_var))
-    
-    master_recipe <- recipe(f, data = data_tr) %>% 
-        #step_zv(all_numeric(), -all_outcomes()) %>% 
-        #step_center(all_numeric(), -all_outcomes()) %>% 
-        #step_scale(all_numeric(), -all_outcomes()) %>% 
-        step_impute_knn(all_predictors(), neighbors = 5) %>% 
-        step_smote(all_outcomes())
-    
-    ridge_mod <- logistic_reg(penalty = tune(), mixture = 0) %>% 
-        set_engine("glmnet") %>% 
-        set_mode("classification")
-    
-    ridge_workflow <- workflow() %>% 
-        add_model(ridge_mod) %>% 
-        add_recipe(master_recipe)
-    
-    # hyperparameter tuning
-    #cluster <- parallel::makeCluster(8)
-    #registerDoParallel(cluster)
-    
-    tic()
-    #cl <- makeCluster(4) 
-    ridge_fit_tr <- ridge_workflow %>% 
-        tune_grid(grid = master_lambda_grid,
-                  resamples = data_tr_cv,
-                  control = control_grid(save_pred = TRUE),
-                  metrics = metric_set(roc_auc, pr_auc, accuracy))
-    #topCluster(cluster)
-    #unregister()
-    #stopCluster(cl)
-    toc()
-    
-    ridge_best_lambda <- ridge_fit_tr %>% select_best("roc_auc")
-    
-    ridge_tuning_plot <- ridge_fit_tr %>% 
-        collect_metrics() %>% 
-        filter(.metric == "roc_auc") %>% 
-        ggplot(aes(x = penalty, y = mean)) + 
-        geom_point() + 
-        geom_line() + 
-        geom_vline(xintercept = ridge_best_lambda$penalty, color = "tomato3") +
-        labs(x = "Penalty", y = "Area under the ROC Curve") +
-        scale_x_log10(labels = scales::label_number()) +
-        theme_pander()
-    
-    # model testing
-    ridge_workflow_sel_param <- ridge_workflow %>%
-        finalize_workflow(ridge_best_lambda)
-    
-    ridge_fit_te <- ridge_workflow_sel_param %>%
-        last_fit(splits)
-    
-    ridge_y_te_pred <- ridge_fit_te %>% 
-        collect_predictions
-    
-    conf_mat(ridge_y_te_pred, truth = all_of(outcome_var), estimate = .pred_class)
-    ridge_roc_auc <- roc_auc(ridge_y_te_pred, truth = all_of(outcome_var), estimate = .pred_class)
-    print(ridge_roc_auc)
-    sens(ridge_y_te_pred, all_of(outcome_var), .pred_class) %>% print()
-    spec(ridge_y_te_pred, all_of(outcome_var), .pred_class) %>% print()
-}
-
-
