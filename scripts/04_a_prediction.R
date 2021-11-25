@@ -241,7 +241,8 @@ results_mat %>%
     group_by(month) %>% 
     summarize(mean = mean(value, na.rm = TRUE),
               sd = sd(value, na.rm = TRUE)) %>% 
-    View()
+    gt::gt() %>% 
+    gt::gtsave(filename = here("outputs", "tables", "data-cf_desc-roauc.html"))
 
 results_mat %>% 
     filter(metrics == "accurary") %>% 
@@ -249,7 +250,8 @@ results_mat %>%
     group_by(month) %>% 
     summarize(mean = mean(value, na.rm = TRUE),
               sd = sd(value, na.rm = TRUE)) %>% 
-    View()
+    gt::gt() %>% 
+    gt::gtsave(filename = here("outputs", "tables", "data-cf_desc-accurary.html"))
 
 # plot the results using area under the ROC curve
 boxplot_predictions <- results_mat %>% 

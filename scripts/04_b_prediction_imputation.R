@@ -258,16 +258,18 @@ results_mat %>%
     pivot_longer(!c(month, metrics), values_to = "value") %>%
     group_by(month) %>% 
     summarize(mean = mean(value, na.rm = TRUE),
-              sd = sd(value, na.rm = TRUE)) %>% 
-    View()
+              sd = sd(value, na.rm = TRUE))  %>% 
+    gt::gt() %>% 
+    gt::gtsave(filename = here("outputs", "tables", "data-imputation_desc-roauc.html"))
 
-results_mat %>% 
+results_mat %>%
     filter(metrics == "accurary") %>% 
     pivot_longer(!c(month, metrics), values_to = "value") %>%
     group_by(month) %>% 
     summarize(mean = mean(value, na.rm = TRUE),
               sd = sd(value, na.rm = TRUE)) %>% 
-    View()
+    gt::gt() %>% 
+    gt::gtsave(filename = here("outputs", "tables", "data-imputation_desc-accurary.html"))
 
 
 boxplot_predictions <- results_mat %>% 
