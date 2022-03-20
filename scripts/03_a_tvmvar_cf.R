@@ -16,7 +16,6 @@ preprocessed_df <- here("data", "processed", "cf_selfharm_longitudinal.rds") %>%
 # prepare data frame for analysis
 preprocessed_df_long <- preprocessed_df %>%
     mutate(index = 1:n(), .before = sh_case) %>% 
-    rename_with(~str_replace(., "Funct_scorecf", "Functscorecf")) %>% 
     select(index,
            sh_case,
            M1_Poscf:M36_Poscf,
@@ -103,7 +102,7 @@ bw_object <- bwSelect(data = tvmvar_data$data,
                       pbar = TRUE)
 
 # save cache
-write_rds(bw_object, here("cache", "bw_object.rds"))
+write_rds(bw_object, here("cache", "data-cf_decs-bw_object.rds"))
 
 bandwidth <- as.numeric(names(which.min(bw_object$meanError)))
 
@@ -121,7 +120,7 @@ fit_tvmvar <- tvmvar(data = tvmvar_data$data,
                      scale = TRUE)
 
 # save cache
-write_rds(fit_tvmvar, here("cache", "fit_tvmvar.rds"))
+write_rds(fit_tvmvar, here("cache", "data-cf_decs-fit_tvmvar.rds"))
 
 #pred_obj <- predict(object = fit_tvmvar, 
 #                    data = tvmvar_data$data, 
