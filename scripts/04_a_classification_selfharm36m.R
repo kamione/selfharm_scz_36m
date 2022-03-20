@@ -116,6 +116,7 @@ results_mat_rf_baseline[1:2, repeat_var] <- iter_results %>%
 
 # save cache
 write_rds(results_mat_rf_baseline, here("cache", "data-cf_model-rf_features-baseline_desc-prediction_baselineto36m.rds"))
+# results_mat_rf_baseline <- read_rds(here("cache", "data-cf_model-rf_features-baseline_desc-prediction_baselineto36m.rds"))
 
 results_mat_rf_baseline %>% 
     filter(metrics == "roauc") %>% 
@@ -199,6 +200,7 @@ results_mat_rf_baseline_mean[1:2, repeat_var] <- iter_results %>%
 
 # save cache
 write_rds(results_mat_rf_baseline_mean, here("cache", "data-cf_model-rf_features-baseline_meansymptoms_desc-prediction_baselineto36m.rds"))
+# results_mat_rf_baseline_mean <- read_rds(here("cache", "data-cf_model-rf_features-baseline_meansymptoms_desc-prediction_baselineto36m.rds"))
 
 results_mat_rf_baseline_mean %>% 
     filter(metrics == "roauc") %>% 
@@ -277,6 +279,7 @@ results_mat_rf_baseline_both[1:2, repeat_var] <- iter_results %>%
 
 # save cache
 write_rds(results_mat_rf_baseline_both, here("cache", "data-cf_model-rf_features-baseline_meanmssdsymptoms_desc-prediction_baselineto36m.rds"))
+# results_mat_rf_baseline_both <- read_rds(here("cache", "data-cf_model-rf_features-baseline_meanmssdsymptoms_desc-prediction_baselineto36m.rds"))
 
 results_mat_rf_baseline_both %>% 
     filter(metrics == "roauc") %>% 
@@ -294,6 +297,10 @@ roauc_models_df <- results_mat_rf_baseline %>%
     bind_rows(results_mat_rf_baseline_both) %>% 
     filter(metrics == "roauc") %>% 
     mutate(model = c("Baseline", "Baseline + Mean", "Baseline + Mean + MSSD"), .before = "metrics")
+
+roauc_models_df %>% 
+    pivot_longer(!c(model, metrics), values_to = "value") %>% 
+    compare_means(formula = value ~ model, data = ., p.adjust.method = "fdr")
 
 figure_comparison_modelclassfication <- roauc_models_df %>% 
     pivot_longer(!c(model, metrics), values_to = "value") %>% 
