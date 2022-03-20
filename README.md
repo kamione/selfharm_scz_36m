@@ -1,6 +1,6 @@
 # A dynamic interaction model of clinical symptoms, social functioning and self-harm in patients with first-episode schizophrenia-spectrum disorders over three years.
 
-Last update: 20 Feb 2022
+Last update: 20 March 2022
 
 ## Folder Structure
 
@@ -74,20 +74,14 @@ The second set of scripts using imputed data.
 
 ## How to run the scripts
 
-### Step 1. Data Cleaning and Preprocessing
-
-### Step 2. Regression Models
-
-### Step 3. Time Varying Vector Autoregressive Model
-
-### Step 4. Classifying Indiviudals with and without Self-harm
-
-### Step 5. Future Self-harm Events Prediction (with 6m information to 6m prediction window)
-
-### Step 6. Future Self-harm Events Prediction (with 6m information to 12m prediction window)
-
-### Step 7. Future Self-harm Events Prediction (with 12m information to 6m prediction window)
-
-### Step 8. Future Self-harm Events Prediction (with 12m information to 12m prediction window)
-
-### Step 9. Visualization and Table for Prediction Models
+```
+Step 1. Data Cleaning and Preprocessing
+Step 2. Regression Models
+Step 3. Time Varying Vector Autoregressive Model
+Step 4. Classifying Indiviudals with and without Self-harm
+Step 5. Future Self-harm Events Prediction (with 6m information to 6m prediction window)
+Step 6. Future Self-harm Events Prediction (with 6m information to 12m prediction window)
+Step 7. Future Self-harm Events Prediction (with 12m information to 6m prediction window)
+Step 8. Future Self-harm Events Prediction (with 12m information to 12m prediction window)
+Step 9. Visualization and Table for Prediction Models
+```
