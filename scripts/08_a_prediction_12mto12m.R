@@ -207,6 +207,19 @@ for (ith_month in 13:25) {
 # save cache
 write_rds(results_mat_rf, here("cache", "data-cf_model-rf_desc-prediction_12mto12m.rds"))
 # results_mat_rf <- read_rds(here("cache", "data-cf_model-rf_desc-prediction_12mto12m.rds"))
+results_mat_rf %>% 
+    filter(metrics == "roauc") %>% 
+    pivot_longer(!c(month, metrics), values_to = "value") %>%
+    group_by(month) %>% 
+    summarize(
+        mean = mean(value, na.rm = TRUE),
+        sd = sd(value, na.rm = TRUE)
+    ) %>% 
+    filter(month %in% 11:23) %>% 
+    summarize(
+        mean = mean(mean),
+        sd = mean(sd)
+    )
 
 # plot the results using area under the ROC curve
 plot_timeseries_boxplots(

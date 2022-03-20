@@ -249,27 +249,10 @@ results_mat_rf %>%
         sd = sd(value, na.rm = TRUE)
     ) %>% 
     filter(month %in% 11:23) %>% 
-    pull(mean) %>% 
-    mean()
-
-results_mat_rf %>% 
-    filter(metrics == "roauc") %>% 
-    pivot_longer(!c(month, metrics), values_to = "value") %>%
-    group_by(month) %>% 
-    summarize(mean = mean(value, na.rm = TRUE),
-              sd = sd(value, na.rm = TRUE)) %>% 
-    gt::gt() %>% 
-    gt::gtsave(filename = here("outputs", "tables", "mod-rf_data-cf_desc-roauc.html"))
-
-results_mat_rf %>% 
-    filter(metrics == "accurary") %>% 
-    pivot_longer(!c(month, metrics), values_to = "value") %>%
-    group_by(month) %>% 
-    summarize(mean = mean(value, na.rm = TRUE),
-              sd = sd(value, na.rm = TRUE)) %>% 
-    gt::gt() %>% 
-    gt::gtsave(filename = here("outputs", "tables", "mod-rf_data-cf_desc-accurary.html"))
-
+    summarize(
+        mean = mean(mean),
+        sd = mean(sd)
+    )
 
 # plot the results using area under the ROC curve
 plot_timeseries_boxplots(
