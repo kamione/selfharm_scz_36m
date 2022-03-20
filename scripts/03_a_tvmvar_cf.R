@@ -5,6 +5,7 @@ library(haven)
 library(mgm)
 library(qgraph)
 library(ggthemes)
+library(glue)
 
 
 # Data IO  ---------------------------------------------------------------------
@@ -18,7 +19,7 @@ preprocessed_df_long <- preprocessed_df %>%
     mutate(index = 1:n(), .before = sh_case) %>% 
     select(index,
            sh_case,
-           M1_Poscf:M36_Poscf,
+           M1_Poscf:M36_Pocfs,
            M1_Negcf:M36_Negcf,
            M1_Aff:M36_Aff,
            M1_SOFAScf:M36_SOFAScf,
@@ -39,8 +40,8 @@ preprocessed_df_long <- preprocessed_df %>%
 
 longitudial_change_fig <- preprocessed_df_long %>% 
     rename(
-        "Positive Symptom" = "Poscf",
-        "Negative Symptom" = "Negcf",
+        "Positive Symptom" = "Pos",
+        "Negative Symptom" = "Neg",
         "Depressive Symptom" = "Aff"
     ) %>% 
     # mutate(case = factor(case, levels = c(0, 1), labels = c("No", "Yes"))) %>% 
