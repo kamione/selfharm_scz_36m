@@ -184,16 +184,13 @@ table_regresson_all_models %>%
         pr_section = sect_properties
     )
 
-
-
- # check model fitness
+# check model fitness
 summ(m0_fit)
 summ(m1_fit)
 summ(m2_fit)
 
 anova(m0_fit, m1_fit, test = "Chisq")
 anova(m0_fit, m2_fit, test = "Chisq")
-anova(m1_fit, m2_fit, test = "Chisq")
 
 # check variance inflation factor
 car::vif(m0_fit)
