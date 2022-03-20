@@ -22,22 +22,22 @@ preprocessed_df <- here("data", "processed", "cf_selfharm_longitudinal.rds") %>%
 # Regression -------------------------------------------------------------------
 m0_fit <- preprocessed_df %>% 
     glm(formula = sh_case ~ Ageat1stpre + Sex + Filter + Yrs_edu + Age_onset +
-            DUP_days + DUP_DSH_His + DUP_SS_His + sub_abuse + Smoker4 + 
-            baseline_sa + Schiz + EP1_hosp + dur_adm1,
+            DUP_days + DUP_DSH_His + DUP_SS_His + sub_abuse + 
+            baseline_sa + Smoker4 + Schiz + EP1_hosp + dur_adm1,
         family = binomial(link="logit"))
 
 m1_fit <- preprocessed_df %>% 
     glm(formula = sh_case ~ Ageat1stpre + Sex + Filter + Yrs_edu + Age_onset +
-            DUP_days + DUP_DSH_His + DUP_SS_His + sub_abuse + Smoker4 + 
-            baseline_sa + Schiz + EP1_hosp + dur_adm1 + 
+            DUP_days + DUP_DSH_His + DUP_SS_His + sub_abuse + 
+            baseline_sa + Smoker4 + Schiz + EP1_hosp + dur_adm1 + 
             mean_36m_pos + mean_36m_neg + mean_36m_aff + mean_36m_sofas + 
             mean_36m_compliance,
         family = binomial(link="logit"))
 
 m2_fit <- preprocessed_df %>% 
     glm(formula = sh_case ~ Ageat1stpre + Sex + Filter + Yrs_edu + Age_onset +
-            DUP_days + DUP_DSH_His + DUP_SS_His + sub_abuse + Smoker4 + 
-            baseline_sa + Schiz + EP1_hosp + dur_adm1 +
+            DUP_days + DUP_DSH_His + DUP_SS_His + sub_abuse + 
+            baseline_sa + Smoker4 + Schiz + EP1_hosp + dur_adm1 +
             mssd_pos + mssd_neg + mssd_aff + mssd_sofas + mssd_compliance,
         family = binomial(link="logit"))
 
@@ -57,7 +57,7 @@ m0_fit_table <- m0_fit %>%
             Smoker4 ~ "Current Smoker",
             Schiz ~ "Diagnosis",
             EP1_hosp ~ "Hospitalization at Onset",
-            dur_adm1 ~ "Duration of 1st Admission (Days)"
+            dur_adm1 ~ "Days of 1st Hospitalization Admission"
         )
     ) %>% 
     add_q(method = "fdr",
@@ -95,7 +95,7 @@ m1_fit_table <- m1_fit %>%
             Smoker4 ~ "Current Smoker",
             Schiz ~ "Diagnosis",
             EP1_hosp ~ "Hospitalization at Onset",
-            dur_adm1 ~ "Duration of 1st Admission (Days)",
+            dur_adm1 ~ "Days of 1st Hospitalization Admission",
             mean_36m_pos ~ "Pos. Symptom (36m Mean)",
             mean_36m_neg ~ "Neg. Symptom (36m Mean)",
             mean_36m_aff ~ "Dep. Symptom (36m Mean)",
@@ -138,7 +138,7 @@ m2_fit_table <- m2_fit %>%
             Smoker4 ~ "Current Smoker",
             Schiz ~ "Diagnosis",
             EP1_hosp ~ "Hospitalization at Onset",
-            dur_adm1 ~ "Duration of 1st Admission (Days)",
+            dur_adm1 ~ "Days of 1st Hospitalization Admission",
             mssd_pos ~ "Pos. Symptom (MSSD)",
             mssd_neg ~ "Neg. Symptom (MSSD)",
             mssd_aff ~ "Dep. Symptom (MSSD)",
@@ -195,3 +195,7 @@ anova(m0_fit, m1_fit, test = "Chisq")
 anova(m0_fit, m2_fit, test = "Chisq")
 anova(m1_fit, m2_fit, test = "Chisq")
 
+# check variance inflation factor
+car::vif(m0_fit)
+car::vif(m1_fit)
+car::vif(m2_fit)

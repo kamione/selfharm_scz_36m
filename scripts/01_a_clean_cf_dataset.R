@@ -195,7 +195,7 @@ table_harm_category_comparison <- sh_case_df %>%
             sub_abuse ~ "Substance Abuse (Lifetime)",
             baseline_sa ~ "Substance Abuse (Baseline)",
             EP1_hosp ~ "Hospitalization at Onset",
-            dur_adm1 ~ "Duration of 1st Admission (Days)",
+            dur_adm1 ~ "Days of 1st Hospitalization Admission",
             mean_36m_pos ~ "Pos. Symptom (36m Mean)",
             mean_36m_neg ~ "Neg. Symptom (36m Mean)",
             mean_36m_aff ~ "Dep. Symptom (36m Mean)",
