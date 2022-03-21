@@ -7,7 +7,6 @@ library(haven)
 library(rlang)
 library(themis) # recipe for SMOTE
 library(stringr)
-library(snow)
 library(ggthemes)
 library(viridis)
 library(doParallel)
@@ -15,6 +14,7 @@ library(ranger)
 mssd <- psych::mssd
 
 source(here("src", "R", "visualization.R"))
+
 
 # Data I/O ---------------------------------------------------------------------
 preprocessed_df <- here("data", "processed", "cf_selfharm_longitudinal.rds") %>% 
