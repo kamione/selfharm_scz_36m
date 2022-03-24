@@ -7,7 +7,6 @@ library(haven)
 library(rlang)
 library(themis) # recipe for SMOTE
 library(stringr)
-library(snow)
 library(ggthemes)
 library(viridis)
 library(doParallel)
