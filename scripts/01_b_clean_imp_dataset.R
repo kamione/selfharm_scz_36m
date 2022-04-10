@@ -121,7 +121,7 @@ sh_case_df_combined <- sh_case_df_combined %>%
     mutate(
         sh_case = factor(sh_case,
                          levels = c(0, 1),
-                         labels = c("Without Self-harm", "With Self-harm"))
+                         labels = c("Without DSH", "With DSH"))
     )
     
 # write the table
@@ -142,11 +142,11 @@ table_dsh_group_comparison <- sh_case_df_combined %>%
             Age_onset ~ "Age of Onset",
             Filter ~ "Treatment",
             DUP_days ~ "DUP (Days)",
-            DUP_DSH_His ~ "DSH in DUP",
+            DUP_DSH_His ~ "NSSI in DUP",
             DUP_SS_His ~ "SA in DUP",
             Smoker4 ~ "Current Smoker",
             Schiz ~ "Diagnosis",
-            sub_abuse ~ "Substance Abuse (Lifetime)",
+            sub_abuse ~ "Illicit Drug Use History",
             baseline_sa ~ "Substance Abuse (Baseline)",
             EP1_hosp ~ "Hospitalization at Onset",
             dur_adm1 ~ "Days of 1st Hospitalization Admission",
@@ -154,12 +154,12 @@ table_dsh_group_comparison <- sh_case_df_combined %>%
             mean_36m_neg ~ "Neg. Symptom (36m Mean)",
             mean_36m_aff ~ "Dep. Symptom (36m Mean)",
             mean_36m_sofas ~ "SOFAS (36m Mean)",
-            mean_36m_compliance ~ "Compliance (36m Mean)",
+            mean_36m_compliance ~ "Medication Adherence (36m Mean)",
             mssd_pos ~ "Pos. Symptom (36m MSSD)",
             mssd_neg ~ "Neg. Symptom (36m MSSD)",
             mssd_aff ~ "Dep. Symptom (36m MSSD)",
             mssd_sofas ~ "SOFAS (36m MSSD)",
-            mssd_compliance ~ "Compliance (36m MSSD)"
+            mssd_compliance ~ "Medication Adherence (36m MSSD)"
         )
     ) %>% 
     add_p() %>% 
@@ -170,7 +170,7 @@ table_dsh_group_comparison <- sh_case_df_combined %>%
         label ~ paste(
             "Abbreviations:",
             "DUP = Duration of Untreated Psychosis;",
-            "DSH = Deliberated Self-harm;",
+            "NSSI = Non-Suicidal Self-Injury;",
             "SA = Suicidal Attempts;",
             "Pos = Positive;",
             "Neg = Negative;",
@@ -219,11 +219,11 @@ table_harm_category_comparison <- sh_case_df_combined %>%
             Age_onset ~ "Age of Onset",
             Filter ~ "Treatment",
             DUP_days ~ "DUP (Days)",
-            DUP_DSH_His ~ "DSH in DUP",
-            DUP_SS_His ~ "SS in DUP",
+            DUP_DSH_His ~ "NSSI in DUP",
+            DUP_SS_His ~ "SA in DUP",
             Smoker4 ~ "Current Smoker",
             Schiz ~ "Diagnosis",
-            sub_abuse ~ "Substance Abuse (Lifetime)",
+            sub_abuse ~ "Illicit Drug Use History",
             baseline_sa ~ "Substance Abuse (Baseline)",
             EP1_hosp ~ "Hospitalization at Onset",
             dur_adm1 ~ "Days of 1st Hospitalization Admission",
@@ -231,12 +231,12 @@ table_harm_category_comparison <- sh_case_df_combined %>%
             mean_36m_neg ~ "Neg. Symptom (36m Mean)",
             mean_36m_aff ~ "Dep. Symptom (36m Mean)",
             mean_36m_sofas ~ "SOFAS (36m Mean)",
-            mean_36m_compliance ~ "Compliance (36m Mean)",
+            mean_36m_compliance ~ "Medication Adherence (36m Mean)",
             mssd_pos ~ "Pos. Symptom (36m MSSD)",
             mssd_neg ~ "Neg. Symptom (36m MSSD)",
             mssd_aff ~ "Dep. Symptom (36m MSSD)",
             mssd_sofas ~ "SOFAS (36m MSSD)",
-            mssd_compliance ~ "Compliance (36m MSSD)"
+            mssd_compliance ~ "Medication Adherence (36m MSSD)"
         )
     ) %>% 
     add_p() %>% 
@@ -248,7 +248,7 @@ table_harm_category_comparison <- sh_case_df_combined %>%
         label ~ paste(
             "Abbreviations:",
             "DUP = Duration of Untreated Psychosis;",
-            "DSH = Deliberated Self-harm;",
+            "NSSI = Non-Suicidal Self-Injury;",
             "SA = Suicidal Attempts;",
             "Pos = Positive;",
             "Neg = Negative;",

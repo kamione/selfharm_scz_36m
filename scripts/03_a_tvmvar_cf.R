@@ -19,7 +19,7 @@ preprocessed_df_long <- preprocessed_df %>%
     mutate(index = 1:n(), .before = sh_case) %>% 
     select(index,
            sh_case,
-           M1_Poscf:M36_Pocfs,
+           M1_Poscf:M36_Poscf,
            M1_Negcf:M36_Negcf,
            M1_Aff:M36_Aff,
            M1_SOFAScf:M36_SOFAScf,
@@ -40,8 +40,8 @@ preprocessed_df_long <- preprocessed_df %>%
 
 longitudial_change_fig <- preprocessed_df_long %>% 
     rename(
-        "Positive Symptom" = "Pos",
-        "Negative Symptom" = "Neg",
+        "Positive Symptom" = "Poscf",
+        "Negative Symptom" = "Negcf",
         "Depressive Symptom" = "Aff"
     ) %>% 
     # mutate(case = factor(case, levels = c(0, 1), labels = c("No", "Yes"))) %>% 
@@ -122,6 +122,7 @@ fit_tvmvar <- tvmvar(data = tvmvar_data$data,
 
 # save cache
 write_rds(fit_tvmvar, here("cache", "data-cf_decs-fit_tvmvar.rds"))
+# fit_tvmvar <- read_rds(here("cache", "data-cf_decs-fit_tvmvar.rds"))
 
 #pred_obj <- predict(object = fit_tvmvar, 
 #                    data = tvmvar_data$data, 
@@ -174,7 +175,7 @@ for(tp in E_select) {
            edge.color = fit_tvmvar$edgecolor[, , 1, tp],
            border.color = "gray60",
            layout = Q$layout, 
-           labels = c("POS", "NEG", "DEP", "SOFAS", "COMP", "DSH"), 
+           labels = c("POS", "NEG", "DEP", "SOFAS", "MA", "DSH"), 
            legend = FALSE,
            vsize = 13, 
            esize = 10,
@@ -213,7 +214,7 @@ legend_labels <- c(expression("POS"["t-1"]  %->%  "DSH"["t"]),
                    expression("DEP"["t-1"]  %->%  "DSH"["t"]))
 legend(22, -0.05, legend_labels, lwd = 2, col = col_es[1:3], bty = "n", cex = 1.5)
 legend_labels <- c(expression("SOFAS"["t-1"]  %->%  "DSH"["t"]),
-                   expression("COMP"["t-1"]  %->%  "DSH"["t"]))
+                   expression("MA"["t-1"]  %->%  "DSH"["t"]))
 legend(29, -0.05, legend_labels, lwd = 2, col = col_es[4:6], bty = "n", cex = 1.5)
 
 

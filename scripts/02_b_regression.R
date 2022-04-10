@@ -50,9 +50,9 @@ m0_fit_table <- m0_fit %>%
             Age_onset ~ "Age of Onset",
             Filter ~ "Treatment",
             DUP_days ~ "DUP (Days)",
-            DUP_DSH_His ~ "DSH in DUP",
-            DUP_SS_His ~ "SS in DUP",
-            sub_abuse ~ "Substance Abuse (Lifetime)",
+            DUP_DSH_His ~ "NSSI in DUP",
+            DUP_SS_His ~ "SA in DUP",
+            sub_abuse ~ "Illicit Drug Use History",
             baseline_sa ~ "Substance Abuse (Baseline)",
             Smoker4 ~ "Current Smoker",
             Schiz ~ "Diagnosis",
@@ -68,7 +68,7 @@ m0_fit_table <- m0_fit %>%
         label ~ paste(
             "Abbreviations:",
             "DUP = Duration of Untreated Psychosis;",
-            "DSH = Deliberated Self-harm;",
+            "NSSI = Non-Suicidal Self-Injury;",
             "SA = Suicidal Attempts;",
             "Pos = Positive;",
             "Neg = Negative;",
@@ -88,9 +88,9 @@ m1_fit_table <- m1_fit %>%
             Age_onset ~ "Age of Onset",
             Filter ~ "Treatment",
             DUP_days ~ "DUP (Days)",
-            DUP_DSH_His ~ "DSH in DUP",
-            DUP_SS_His ~ "SS in DUP",
-            sub_abuse ~ "Substance Abuse (Lifetime)",
+            DUP_DSH_His ~ "NSSI in DUP",
+            DUP_SS_His ~ "SA in DUP",
+            sub_abuse ~ "Illicit Drug Use History",
             baseline_sa ~ "Substance Abuse (Baseline)",
             Smoker4 ~ "Current Smoker",
             Schiz ~ "Diagnosis",
@@ -100,7 +100,7 @@ m1_fit_table <- m1_fit %>%
             mean_36m_neg ~ "Neg. Symptom (36m Mean)",
             mean_36m_aff ~ "Dep. Symptom (36m Mean)",
             mean_36m_sofas ~ "SOFAS (36m Mean)",
-            mean_36m_compliance ~ "Compliance (36m Mean)"
+            mean_36m_compliance ~ "Medication Adherence (36m Mean)"
         )
     ) %>% 
     add_q(method = "fdr",
@@ -111,7 +111,7 @@ m1_fit_table <- m1_fit %>%
         label ~ paste(
             "Abbreviations:",
             "DUP = Duration of Untreated Psychosis;",
-            "DSH = Deliberated Self-harm;",
+            "NSSI = Non-Suicidal Self-Injury;",
             "SA = Suicidal Attempts;",
             "Pos = Positive;",
             "Neg = Negative;",
@@ -131,19 +131,19 @@ m2_fit_table <- m2_fit %>%
             Age_onset ~ "Age of Onset",
             Filter ~ "Treatment",
             DUP_days ~ "DUP (Days)",
-            DUP_DSH_His ~ "DSH in DUP",
-            DUP_SS_His ~ "SS in DUP",
-            sub_abuse ~ "Substance Abuse (Lifetime)",
+            DUP_DSH_His ~ "NSSI in DUP",
+            DUP_SS_His ~ "SA in DUP",
+            sub_abuse ~ "Illicit Drug Use History",
             baseline_sa ~ "Substance Abuse (Baseline)",
             Smoker4 ~ "Current Smoker",
             Schiz ~ "Diagnosis",
             EP1_hosp ~ "Hospitalization at Onset",
             dur_adm1 ~ "Days of 1st Hospitalization Admission",
-            mssd_pos ~ "Pos. Symptom (MSSD)",
-            mssd_neg ~ "Neg. Symptom (MSSD)",
-            mssd_aff ~ "Dep. Symptom (MSSD)",
-            mssd_sofas ~ "SOFAS (MSSD)",
-            mssd_compliance ~ "Compliance (MSSD)"
+            mssd_pos ~ "Pos. Symptom (36m MSSD)",
+            mssd_neg ~ "Neg. Symptom (36m MSSD)",
+            mssd_aff ~ "Dep. Symptom (36m MSSD)",
+            mssd_sofas ~ "SOFAS (36m MSSD)",
+            mssd_compliance ~ "Medication Adherence (36m MSSD)"
         )
     ) %>% 
     add_q(method = "fdr",
@@ -154,7 +154,7 @@ m2_fit_table <- m2_fit %>%
         label ~ paste(
             "Abbreviations:",
             "DUP = Duration of Untreated Psychosis;",
-            "DSH = Deliberated Self-harm;",
+            "NSSI = Non-Suicidal Self-Injury;",
             "SA = Suicidal Attempts;",
             "Pos = Positive;",
             "Neg = Negative;",
