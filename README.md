@@ -92,7 +92,7 @@ The second set of scripts using imputed data.
 
 ## Setup
 
-Start the RStudio via [longitudinal_selfharm.Rpoj](https://github.com/kamione/selfharm_scz_36m/blob/master/longitudinal_selfharm.Rproj).
+Start the RStudio via [longitudinal_selfharm.Rproj](https://github.com/kamione/selfharm_scz_36m/blob/master/longitudinal_selfharm.Rproj).
 
 <!-- Usage -->
 
