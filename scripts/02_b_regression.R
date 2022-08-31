@@ -2,6 +2,8 @@
 library(tidyverse)
 library(here)
 library(jtools)
+library(officer)
+library(gtsummary)
 
 # page setup for table to docx
 sect_properties <- prop_section(
@@ -197,3 +199,23 @@ car::vif(m0_fit)
 car::vif(m1_fit)
 car::vif(m2_fit)
 
+
+# check correlations between mean and MSSD
+cor_res <- preprocessed_df %>% 
+    select(mean_36m_pos:mssd_compliance) %>%
+    psych::corr.test(method = "spearman")
+pdf(here("outputs", "figs", "data-imp_desc-mean_mssd_cor.pdf"), height = 8, width = 8)
+corrplot::corrplot(
+    cor_res$r,
+    col = colorRampPalette(c("#0C6291", "#FBFEF9", "#A63446"))(256),
+    method = "square",
+    mar = rep(0, 4),
+    p.mat = cor_res$p,
+    tl.col = "#1C1C1C",
+    tl.srt = 45,
+    type = c("upper"),
+    diag = FALSE,
+    rect.col = "lightgrey",
+    number.digits = 2
+)
+dev.off()

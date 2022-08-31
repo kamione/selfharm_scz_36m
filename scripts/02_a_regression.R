@@ -2,6 +2,8 @@
 library(tidyverse)
 library(here)
 library(jtools)
+library(officer)
+library(gtsummary)
 
 # page setup for table to docx
 sect_properties <- prop_section(
@@ -17,7 +19,9 @@ preprocessed_df <- here("data", "processed", "cf_selfharm_longitudinal.rds") %>%
     read_rds() %>% 
     select(sh_case, Ageat1stpre, Sex, Filter, Yrs_edu, Age_onset, DUP_days,
            DUP_DSH_His, DUP_SS_His, sub_abuse, baseline_sa, Smoker4, Schiz,
-           EP1_hosp, dur_adm1, mean_36m_pos:mssd_compliance)
+           EP1_hosp, dur_adm1, mean_36m_pos:mssd_compliance) %>% 
+    drop_na()
+
 
 # Regression -------------------------------------------------------------------
 m0_fit <- preprocessed_df %>% 
@@ -38,6 +42,15 @@ m2_fit <- preprocessed_df %>%
     glm(formula = sh_case ~ Ageat1stpre + Sex + Filter + Yrs_edu + Age_onset +
             DUP_days + DUP_DSH_His + DUP_SS_His + sub_abuse + 
             baseline_sa + Smoker4 + Schiz + EP1_hosp + dur_adm1 +
+            mssd_pos + mssd_neg + mssd_aff + mssd_sofas + mssd_compliance,
+        family = binomial(link="logit"))
+
+m3_fit <- preprocessed_df %>% 
+    glm(formula = sh_case ~ Ageat1stpre + Sex + Filter + Yrs_edu + Age_onset +
+            DUP_days + DUP_DSH_His + DUP_SS_His + sub_abuse + 
+            baseline_sa + Smoker4 + Schiz + EP1_hosp + dur_adm1 +
+            mean_36m_pos + mean_36m_neg + mean_36m_aff + mean_36m_sofas + 
+            mean_36m_compliance +
             mssd_pos + mssd_neg + mssd_aff + mssd_sofas + mssd_compliance,
         family = binomial(link="logit"))
 
@@ -165,6 +178,55 @@ m2_fit_table <- m2_fit %>%
         )
     )
 
+m3_fit_table <- m3_fit %>% 
+    tbl_regression(
+        add_estimate_to_reference_rows = TRUE,
+        label = list(
+            Ageat1stpre ~ "Age (Baseline)",
+            Yrs_edu ~ "Education Years", 
+            Age_onset ~ "Age of Onset",
+            Filter ~ "Treatment",
+            DUP_days ~ "DUP (Days)",
+            DUP_DSH_His ~ "NSSI in DUP",
+            DUP_SS_His ~ "SA in DUP",
+            sub_abuse ~ "Illicit Substance Use (Lifetime)",
+            baseline_sa ~ "Substance Abuse (Baseline)",
+            Smoker4 ~ "Current Smoker",
+            Schiz ~ "Diagnosis",
+            EP1_hosp ~ "Hospitalization at Onset",
+            dur_adm1 ~ "Days of 1st Hospitalization Admission",
+            mean_36m_pos ~ "Pos. Symptom (36m Mean)",
+            mean_36m_neg ~ "Neg. Symptom (36m Mean)",
+            mean_36m_aff ~ "Dep. Symptom (36m Mean)",
+            mean_36m_sofas ~ "SOFAS (36m Mean)",
+            mean_36m_compliance ~ "Medication Adherence (36m Mean)",
+            mssd_pos ~ "Pos. Symptom (36m MSSD)",
+            mssd_neg ~ "Neg. Symptom (36m MSSD)",
+            mssd_aff ~ "Dep. Symptom (36m MSSD)",
+            mssd_sofas ~ "SOFAS (36m MSSD)",
+            mssd_compliance ~ "Medication Adherence (36m MSSD)"
+        )
+    ) %>% 
+    add_q(method = "fdr",
+          pvalue_fun = function(x) style_pvalue(x, digits = 2),
+          quiet = TRUE) %>% 
+    bold_p(q = TRUE) %>% 
+    modify_footnote(
+        label ~ paste(
+            "Abbreviations:",
+            "DUP = Duration of Untreated Psychosis;",
+            "NSSI = Non-Suicidal Self-Injury;",
+            "SA = Suicidal Attempts;",
+            "Pos = Positive;",
+            "Neg = Negative;",
+            "Dep = Depressive;",
+            "SOFAS = Social and Occupational Functioning Assessment Scale;",
+            "MSSD = Mean of the Squared Successive Differences",
+            sep = " "
+        )
+    )
+
+
 table_regresson_all_models <- tbl_merge(
     tbls = list(m0_fit_table, m1_fit_table, m2_fit_table),
     tab_spanner = c("**M0**", "**M1**", "**M2**")
@@ -188,11 +250,56 @@ table_regresson_all_models %>%
 summ(m0_fit)
 summ(m1_fit)
 summ(m2_fit)
+summ(m3_fit)
 
+# compare models
 anova(m0_fit, m1_fit, test = "Chisq")
 anova(m0_fit, m2_fit, test = "Chisq")
+anova(m1_fit, m3_fit, test = "Chisq")
+anova(m2_fit, m3_fit, test = "Chisq")
+
+AIC(m0_fit, m1_fit, m2_fit, m3_fit)
+BIC(m0_fit, m1_fit, m2_fit, m3_fit)
 
 # check variance inflation factor
 car::vif(m0_fit)
 car::vif(m1_fit)
 car::vif(m2_fit)
+car::vif(m3_fit)
+
+# check correlations between mean and MSSD
+cor_res <- preprocessed_df %>% 
+    select(mean_36m_pos:mssd_compliance) %>%
+    rename(
+        "Pos. Symptom (36m Mean)" = "mean_36m_pos",
+        "Neg. Symptom (36m Mean)" = "mean_36m_neg",
+        "Dep. Symptom (36m Mean)" = "mean_36m_aff",
+        "SOFAS (36m Mean)" = "mean_36m_sofas",
+        "Medication Adherence (36m Mean)" = "mean_36m_compliance",
+        "Pos. Symptom (36m MSSD)" = "mssd_pos",
+        "Neg. Symptom (36m MSSD)" = "mssd_neg",
+        "Dep. Symptom (36m MSSD)" = "mssd_aff",
+        "SOFAS (36m MSSD)" = "mssd_sofas",
+        "Medication Adherence (36m MSSD)" = "mssd_compliance",
+    ) %>% 
+    psych::corr.test(method = "spearman")
+pdf(here("outputs", "figs", "data-cf_desc-mean_mssd_cor.pdf"), height = 8, width = 8)
+corrplot::corrplot(
+    cor_res$r,
+    col = colorRampPalette(c("#0C6291", "#FBFEF9", "#A63446"))(256),
+    method = "square",
+    mar = rep(0, 4),
+    p.mat = cor_res$p,
+    tl.col = "#1C1C1C",
+    tl.srt = 45,
+    type = c("upper"),
+    diag = FALSE,
+    rect.col = "lightgrey",
+    number.digits = 2
+)
+dev.off()
+
+
+
+
+
