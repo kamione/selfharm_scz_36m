@@ -1,6 +1,22 @@
-# A dynamic interaction model of clinical symptoms, social functioning and self-harm in patients with first-episode schizophrenia-spectrum disorders over three years.
+<div align="center">
+<!-- Title -->
 
-Last update: 20 March 2022
+# Dynamic Patterns of Symptoms and Functioning in Predicting Deliberate Self-harm in Patients with First-Episode Schizophrenia-Spectrum Disorders Over 3 Years.
+
+<div align="left">
+<!-- Badges -->
+
+![](https://img.shields.io/tokei/lines/github/kamione/selfharm_scz_36m)
+
+Last update: 31 Aug 2022
+
+<!-- Description -->
+
+## Description
+
+The code repository for the [paper](https://academic.oup.com/schizophreniabulletin/advance-article-abstract/doi/10.1093/schbul/sbac057/6605811?redirectedFrom=fulltext&login=false).
+
+<!-- Folder Structure -->
 
 ## Folder Structure
 
@@ -72,7 +88,17 @@ The second set of scripts using imputed data.
 9. 09_b_prediction_performance.R
 ```
 
-## How to run the scripts
+<!-- Setup -->
+
+## Setup
+
+Start the RStudio via [longitudinal_selfharm.Rpoj](https://github.com/kamione/selfharm_scz_36m/blob/master/longitudinal_selfharm.Rproj).
+
+<!-- Usage -->
+
+## Usage
+
+### How to run the scripts
 
 ```
 Step 1. Data Cleaning and Preprocessing
@@ -84,4 +110,19 @@ Step 6. Future Self-harm Events Prediction (with 6m information to 12m predictio
 Step 7. Future Self-harm Events Prediction (with 12m information to 6m prediction window)
 Step 8. Future Self-harm Events Prediction (with 12m information to 12m prediction window)
 Step 9. Visualization and Table for Prediction Models
+```
+
+<!-- Citation -->
+
+## Citation
+
+```{bibtex}
+@article{10.1093/schbul/sbac057,
+    author = {Wong, Ting Yat and Chan, Sherry Kit Wa and Cheung, Charlton and Lai Ming Hui, Christy and Suen, Yi Nam and Chang, Wing Chung and Lee, Edwin Ho Ming and Chen, Eric Yu Hai},
+    title = "{Dynamic Patterns of Symptoms and Functioning in Predicting Deliberate Self-harm in Patients with First-Episode Schizophrenia-Spectrum Disorders Over 3 Years}",
+    journal = {Schizophrenia Bulletin},
+    year = {2022},
+    doi = {10.1093/schbul/sbac057},
+}
+
 ```
